@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { loginUser } from '../api/api';
+import ForgotPassword from './ForgotPassword';
 
 const Login = ({ onBack }) => {
   const [formData, setFormData] = useState({
@@ -9,6 +10,7 @@ const Login = ({ onBack }) => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -64,12 +66,32 @@ const Login = ({ onBack }) => {
   };
 
   const handleForgotPassword = () => {
-    alert('Forgot password functionality will be implemented soon.');
+    setShowForgotPassword(true);
+  };
+
+  const handleBackFromForgotPassword = () => {
+    setShowForgotPassword(false);
+  };
+
+  const handleForgotPasswordSuccess = () => {
+    setShowForgotPassword(false);
+    setError('');
+    alert('Password reset successful! Please log in with your new password.');
   };
 
   const handleCreateAccount = () => {
     alert('Account creation will redirect to the registration flow.');
   };
+
+  // Show forgot password component if in forgot password mode
+  if (showForgotPassword) {
+    return (
+      <ForgotPassword
+        onBack={handleBackFromForgotPassword}
+        onSuccess={handleForgotPasswordSuccess}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
