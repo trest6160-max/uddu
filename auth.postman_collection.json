@@ -1,0 +1,319 @@
+{
+  "info": {
+    "name": "Auth + Transaction + Document API",
+    "_postman_id": "b7c9f6a2-0d3e-4f7e-8c1f-9876543210ab",
+    "description": "Postman collection for testing authentication, transaction, and document routes",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"john@example.com\",\n  \"phoneNumber\": \"9876543210\",\n  \"address\": \"123 Main Street\",\n  \"state\": \"CA\",\n  \"pinCode\": \"123456\",\n  \"termsAccepted\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "protocol": "http",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","auth","register"]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"TEMP_PASSWORD\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "protocol": "http",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","auth","login"]
+            }
+          }
+        },
+        {
+          "name": "Send Email OTP",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"john@example.com\"\n}" },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/send-email-otp",
+              "protocol": "http",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","auth","send-email-otp"]
+            }
+          }
+        },
+        {
+          "name": "Verify Email OTP",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"verificationId\": \"YOUR_VERIFICATION_ID\",\n  \"otp\": \"123456\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/verify-email-otp",
+              "protocol": "http",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","auth","verify-email-otp"]
+            }
+          }
+        },
+        {
+          "name": "Forgot Password (Start)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"john@example.com\"\n}" },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/forgot-password",
+              "protocol": "http",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","auth","forgot-password"]
+            }
+          }
+        },
+        {
+          "name": "Verify Forgot Password OTP",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"verificationId\": \"YOUR_VERIFICATION_ID\",\n  \"otp\": \"123456\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/verify-forgot-password",
+              "protocol": "http",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","auth","verify-forgot-password"]
+            }
+          }
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"newPassword\": \"newStrongPassword123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/reset-password",
+              "protocol": "http",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","auth","reset-password"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Transactions",
+      "item": [
+        {
+          "name": "Create Transaction",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"transaction_id\": \"TXN_1756089392007_umvldmgbl\",\n  \"user_id\": \"64f0aa111111111111111111\",\n  \"user_info\": {\n    \"first_name\": \"Nandini\",\n    \"last_name\": \"Kumari\",\n    \"email\": \"sumitgoswami282@gmail.com\",\n    \"phone\": \"09608042898\",\n    \"address\": \"Garden\",\n    \"state\": \"jharkhand\",\n    \"pin_code\": \"834008\"\n  },\n  \"documents\": [],\n  \"pricing\": {\"subtotal\": 2500, \"gst_amount\": 450, \"gst_percentage\": 18, \"total_amount\": 2950, \"currency\": \"INR\"},\n  \"status\": \"pending\",\n  \"metadata\": {\"total_documents\": 0, \"platform\": \"web\", \"version\": \"1.0.0\"}\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/transactions",
+              "protocol": "http",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","transactions"]
+            }
+          }
+        },
+        {
+          "name": "Update Transaction",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"completed\"\n}" },
+            "url": {
+              "raw": "{{baseUrl}}/api/transactions/TXN_1756089392007_umvldmgbl",
+              "protocol": "http",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","transactions","TXN_1756089392007_umvldmgbl"]
+            }
+          }
+        },
+        {
+          "name": "Get Transactions by User",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/transactions/user/64f0aa111111111111111111",
+              "protocol": "http",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","transactions","user","64f0aa111111111111111111"]
+            }
+          }
+        },
+        {
+          "name": "Get Transaction by Id",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/transactions/TXN_1756089392007_umvldmgbl",
+              "protocol": "http",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","transactions","TXN_1756089392007_umvldmgbl"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Documents",
+      "item": [
+        {
+          "name": "Upload Single Document",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "userId", "value": "64f0aa111111111111111111", "type": "text" },
+                { "key": "transactionId", "value": "64f0bb222222222222222222", "type": "text" },
+                { "key": "documentType", "value": "aadhaar", "type": "text" },
+                { "key": "file", "type": "file", "src": ["./sample.pdf"] }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/documents/upload",
+              "protocol": "http",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","documents","upload"]
+            }
+          }
+        },
+        {
+          "name": "Upload Multiple Documents",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "userId", "value": "64f0aa111111111111111111", "type": "text" },
+                { "key": "transactionId", "value": "64f0bb222222222222222222", "type": "text" },
+                { "key": "documentType", "value": "other", "type": "text" },
+                { "key": "files", "type": "file", "src": ["./doc1.pdf"] },
+                { "key": "files", "type": "file", "src": ["./doc2.png"] }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/documents/upload-many",
+              "protocol": "http",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","documents","upload-many"]
+            }
+          }
+        },
+        {
+          "name": "Get Documents By User",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/documents/user/64f0aa111111111111111111",
+              "protocol": "http",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","documents","user","64f0aa111111111111111111"]
+            }
+          }
+        },
+        {
+          "name": "Get Documents By Transaction",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/documents/transaction/64f0bb222222222222222222",
+              "protocol": "http",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","documents","transaction","64f0bb222222222222222222"]
+            }
+          }
+        },
+        {
+          "name": "Get Document By Id",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/documents/64f0cc333333333333333333",
+              "protocol": "http",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","documents","64f0cc333333333333333333"]
+            }
+          }
+        },
+        {
+          "name": "Update Document Status",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"documentStatus\": \"under_review\"\n}" },
+            "url": {
+              "raw": "{{baseUrl}}/api/documents/64f0cc333333333333333333/status",
+              "protocol": "http",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","documents","64f0cc333333333333333333","status"]
+            }
+          }
+        },
+        {
+          "name": "Upload Signed Document (Mark Signed)",
+          "request": {
+            "method": "PATCH",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "file", "type": "file", "src": ["./signed.pdf"] }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/documents/64f0cc333333333333333333/signed-file",
+              "protocol": "http",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","documents","64f0cc333333333333333333","signed-file"]
+            }
+          }
+        },
+        {
+          "name": "Delete Document",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/api/documents/64f0cc333333333333333333",
+              "protocol": "http",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","documents","64f0cc333333333333333333"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
