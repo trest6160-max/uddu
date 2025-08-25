@@ -453,19 +453,19 @@ const Dashboard = ({ onLogout, onBack }) => {
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Transaction
+                        Transaction Details
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Amount
+                        Amount Breakdown
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Status
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Date
+                        Timestamps
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Documents
+                        Documents & Types
                       </th>
                     </tr>
                   </thead>
@@ -475,33 +475,59 @@ const Dashboard = ({ onLogout, onBack }) => {
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div>
                             <div className="text-sm font-medium text-gray-900">
-                              #{transaction.transaction_id || transaction._id.slice(-8)}
+                              #{transaction.transactionId || transaction._id.slice(-8)}
                             </div>
                             <div className="text-sm text-gray-500">
-                              ID: {transaction._id.slice(-8)}
+                              DB ID: {transaction._id.slice(-8)}
                             </div>
+                            {transaction.userInfo && (
+                              <div className="text-xs text-gray-400 mt-1">
+                                {transaction.userInfo.first_name} {transaction.userInfo.last_name}
+                              </div>
+                            )}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">
+                          <div className="text-sm text-gray-900 font-medium">
                             {formatCurrency(transaction.pricing?.total_amount || 0)}
                           </div>
+                          <div className="text-xs text-gray-500">
+                            Subtotal: {formatCurrency(transaction.pricing?.subtotal || 0)}
+                          </div>
                           {transaction.pricing?.gst_amount && (
-                            <div className="text-sm text-gray-500">
-                              GST: {formatCurrency(transaction.pricing.gst_amount)}
+                            <div className="text-xs text-gray-500">
+                              GST ({transaction.pricing.gst_percentage}%): {formatCurrency(transaction.pricing.gst_amount)}
                             </div>
                           )}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           {getTransactionStatusBadge(transaction.status)}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {formatDate(transaction.createdAt)}
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">
+                            {formatDate(transaction.createdAt)}
+                          </div>
+                          {transaction.updatedAt !== transaction.createdAt && (
+                            <div className="text-xs text-gray-500">
+                              Updated: {formatDate(transaction.updatedAt)}
+                            </div>
+                          )}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">
-                            {transaction.metadata?.total_documents || 0} docs
-                          </span>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex flex-col space-y-1">
+                            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs inline-block w-fit">
+                              {transaction.metadata?.total_documents || transaction.documents?.length || 0} docs
+                            </span>
+                            {transaction.documents && transaction.documents.length > 0 && (
+                              <div className="text-xs text-gray-500">
+                                {transaction.documents.map((doc, index) => (
+                                  <div key={index} className="truncate max-w-32">
+                                    {doc.document_type?.replace(/-/g, ' ') || 'Document'}
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
                         </td>
                       </tr>
                     ))}
