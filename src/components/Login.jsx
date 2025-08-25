@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { loginUser } from '../api/api';
 import ForgotPassword from './ForgotPassword';
 
-const Login = ({ onBack }) => {
+const Login = ({ onBack, onLoginSuccess }) => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -50,10 +50,12 @@ const Login = ({ onBack }) => {
         localStorage.setItem('usedTempPassword', userData.usedTempPassword.toString());
 
         // Tokens are already saved by the loginUser function
-        alert('Login successful! User data saved to localStorage.');
-
-        // Optionally redirect or update app state here
         console.log('User logged in:', userData);
+
+        // Call the success callback to redirect to dashboard
+        if (onLoginSuccess) {
+          onLoginSuccess();
+        }
       } else {
         setError('Login failed. Please check your credentials.');
       }
