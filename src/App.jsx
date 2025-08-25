@@ -20,7 +20,7 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   // Check if user is already logged in on app start
-  React.useEffect(() => {
+  useEffect(() => {
     const accessToken = localStorage.getItem('accessToken');
     const userData = localStorage.getItem('userData');
 
