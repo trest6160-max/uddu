@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import FileUpload from './components/FileUpload';
@@ -6,16 +6,29 @@ import Registration from './components/Registration';
 import PaymentSummary from './components/PaymentSummary';
 import FileUploadProgress from './components/FileUploadProgress';
 import Login from './components/Login';
+import Dashboard from './components/Dashboard';
 import ApiDebug from './components/ApiDebug';
 import RazorpayTest from './components/RazorpayTest';
 
 function App() {
-  const [currentScreen, setCurrentScreen] = useState('upload'); // 'upload', 'registration', 'payment', or 'login'
+  const [currentScreen, setCurrentScreen] = useState('upload'); // 'upload', 'registration', 'payment', 'login', or 'dashboard'
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [userInfo, setUserInfo] = useState(null);
   const [showUploadProgress, setShowUploadProgress] = useState(false);
   const [transactionId, setTransactionId] = useState(null);
   const [paymentId, setPaymentId] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // Check if user is already logged in on app start
+  useEffect(() => {
+    const accessToken = localStorage.getItem('accessToken');
+    const userData = localStorage.getItem('userData');
+
+    if (accessToken && userData) {
+      setIsLoggedIn(true);
+      setCurrentScreen('dashboard');
+    }
+  }, []);
 
   const handleProceedToRegistration = (files) => {
     setUploadedFiles(files);
@@ -57,6 +70,23 @@ function App() {
     setShowUploadProgress(false);
     setTransactionId(null);
     setPaymentId(null);
+    setIsLoggedIn(false);
+  };
+
+  const handleLoginSuccess = () => {
+    setIsLoggedIn(true);
+    setCurrentScreen('dashboard');
+  };
+
+  const handleLogout = () => {
+    localStorage.clear();
+    setIsLoggedIn(false);
+    setCurrentScreen('upload');
+    setUploadedFiles([]);
+    setUserInfo(null);
+    setShowUploadProgress(false);
+    setTransactionId(null);
+    setPaymentId(null);
   };
 
   return (
@@ -81,10 +111,19 @@ function App() {
           />
         )}
         {currentScreen === 'login' && (
-          <Login onBack={handleBackToHome} />
+          <Login
+            onBack={handleBackToHome}
+            onLoginSuccess={handleLoginSuccess}
+          />
+        )}
+        {currentScreen === 'dashboard' && (
+          <Dashboard
+            onBack={handleBackToHome}
+            onLogout={handleLogout}
+          />
         )}
       </main>
-      {currentScreen !== 'login' && <Footer />}
+      {currentScreen !== 'login' && currentScreen !== 'dashboard' && <Footer />}
 
       {/* Upload Progress Modal */}
       <FileUploadProgress
