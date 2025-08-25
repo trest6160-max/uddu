@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { loginUser } from '../api/api';
 
 const Login = ({ onBack }) => {
   const [formData, setFormData] = useState({
@@ -7,6 +8,7 @@ const Login = ({ onBack }) => {
     showPassword: false
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -23,15 +25,42 @@ const Login = ({ onBack }) => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    
-    // Simulate login
-    setTimeout(() => {
+    setError('');
+
+    try {
+      const response = await loginUser(formData.email, formData.password);
+
+      if (response.success && response.data) {
+        // Save user data to localStorage
+        const userData = response.data;
+        localStorage.setItem('userData', JSON.stringify(userData));
+        localStorage.setItem('userId', userData.id);
+        localStorage.setItem('userEmail', userData.email);
+        localStorage.setItem('firstName', userData.firstName);
+        localStorage.setItem('lastName', userData.lastName);
+        localStorage.setItem('phoneNumber', userData.phoneNumber);
+        localStorage.setItem('address', userData.address);
+        localStorage.setItem('state', userData.state);
+        localStorage.setItem('pinCode', userData.pinCode);
+        localStorage.setItem('usedTempPassword', userData.usedTempPassword.toString());
+
+        // Tokens are already saved by the loginUser function
+        alert('Login successful! User data saved to localStorage.');
+
+        // Optionally redirect or update app state here
+        console.log('User logged in:', userData);
+      } else {
+        setError('Login failed. Please check your credentials.');
+      }
+    } catch (err) {
+      console.error('Login error:', err);
+      setError(err.message || 'Login failed. Please try again.');
+    } finally {
       setIsLoading(false);
-      alert('Login functionality will be implemented soon. For now, this is just a demo.');
-    }, 2000);
+    }
   };
 
   const handleForgotPassword = () => {
@@ -81,6 +110,13 @@ const Login = ({ onBack }) => {
               <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome Back</h2>
               <p className="text-gray-600">Sign in to your account to continue</p>
             </div>
+
+            {/* Error Message */}
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
+                {error}
+              </div>
+            )}
 
             {/* Login Form */}
             <form onSubmit={handleSubmit} className="space-y-6">
